@@ -1,8 +1,31 @@
-# React + Vite
+# Sparse Autoencoder Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A 3D visualization tool for sparse autoencoders built with React and Three.js.
 
-Currently, two official plugins are available:
+## Features
+- Interactive 3D visualization of network architecture
+- Real-time visualization of neuron activations
+- Weight visualization with color-coded connections
+- Interactive elements with detailed information on click
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+## Local Development Setup
+
+1. Clone the repository
+```bash
+git clone https://github.com/Nalin-khanna/sparse-autoencoder-visualiser-.git
+cd sparse-autoencoder-visualiser
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm run dev
+```
