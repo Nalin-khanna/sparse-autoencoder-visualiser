@@ -7,7 +7,7 @@ const SparseAutoencoder = () => {
   const [inputData, setInputData] = useState(new Array(10).fill(0.1));
   const [networkState, setNetworkState] = useState({
     input: new Array(10).fill(0.1),
-    hidden: new Array(20).fill(0.01), // Sparse layer has more neurons but most are inactive
+    hidden: new Array(20).fill(0.01), // Sparse layer 
     output: new Array(10).fill(0.1),
     weights1: Array(10).fill().map(() => Array(20).fill(0).map(() => Math.random() * 2 - 1)),
     weights2: Array(20).fill().map(() => Array(10).fill(0).map(() => Math.random() * 2 - 1))
@@ -19,19 +19,19 @@ const SparseAutoencoder = () => {
   const relu = (x) => Math.max(0, x);
   const sigmoid = (x) => 1 / (1 + Math.exp(-x));
 
-  // Forward pass through the network
+  // Forward pass 
   const forwardPass = (input) => {
-    // Input to hidden layer
+    // Input 
     const hidden = networkState.weights1.map((row, i) => {
       const sum = row.reduce((acc, weight, j) => acc + weight * input[j], 0);
       return relu(sum); // ReLU activation for sparsity
     });
 
-    // Apply sparsity constraint (keep only top 20% activations)
+    // sparsity constraint 
     const threshold = hidden.sort((a, b) => b - a)[Math.floor(hidden.length * 0.2)];
     const sparseHidden = hidden.map(h => h >= threshold ? h : 0);
 
-    // Hidden to output layer
+    // Hidden to output 
     const output = networkState.weights2.map((row, i) => {
       const sum = row.reduce((acc, weight, j) => acc + weight * sparseHidden[j], 0);
       return sigmoid(sum);
@@ -56,7 +56,6 @@ const SparseAutoencoder = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
     
@@ -66,7 +65,7 @@ const SparseAutoencoder = () => {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    // Create neurons with activation visualization
+   
     const createNeuronLayer = (count, x, activations, layerName) => { 
       const neurons = [];
       const spacing = 1.5;
@@ -91,7 +90,7 @@ const SparseAutoencoder = () => {
       return neurons;
     };
 
-    // Create connections with weight visualization
+    
     const createConnections = (sourceNeurons, targetNeurons, weights, layerName) => {
       const connections = [];
       for (let i = 0; i < sourceNeurons.length; i++) {
@@ -133,7 +132,7 @@ const SparseAutoencoder = () => {
     const connections1 = createConnections(inputNeurons, hiddenNeurons, networkState.weights1, 'input to hidden');
     const connections2 = createConnections(hiddenNeurons, outputNeurons, networkState.weights2, 'hidden to output');
     const handleClick = (event) => {
-      // Calculate mouse position in normalized device coordinates
+      // YEH FUNCTION CHATGPT SE LIKHWAYA HAI 
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -169,7 +168,6 @@ const SparseAutoencoder = () => {
     renderer.domElement.addEventListener('click', handleClick);
 
 
-    // Animation
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
@@ -177,7 +175,7 @@ const SparseAutoencoder = () => {
     };
     animate();
 
-    // Cleanup
+    // SAAF SAFAI KARI JAA RAHI HAI
     return () => {
       
       scene.traverse((object) => {
