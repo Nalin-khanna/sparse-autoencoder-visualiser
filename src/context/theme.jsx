@@ -11,7 +11,7 @@ export const ThemeProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    document.body.style.backgroundColor = isLightTheme ? "#F5F5F5" : "#09090a";
+    document.body.style.backgroundColor = isLightTheme ? "#F5F5F1" : "#1E1B1A";
   }, [isLightTheme]);
 
   return (

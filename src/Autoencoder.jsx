@@ -9,11 +9,11 @@ import { Sun } from "lucide-react";
 const SparseAutoencoder = () => {
   const { isLightTheme, updateTheme } = useContext(ThemeContext);
   const textColor = isLightTheme ? "text-black" : "text-white";
-  const iconColor = isLightTheme ? "black" : "#C8BCF6";
-  const bgColor = isLightTheme ? "bg-white" : "bg-[#161618]";
-  const borderColor = isLightTheme ? "border-[#52459F]" : "border-[#C8BCF6]";
-  const primaryColor = isLightTheme ? "bg-[#52459F]" : "bg-[#C8BCF6]";
-  const accentColor = isLightTheme ? "accent-[#52459F]" : "accent-[#C8BCF6]";
+  const iconColor = isLightTheme ? "#57534E" : "#E7E5E4";
+  const bgColor = isLightTheme ? "bg-[#F5F5F1]" : "bg-[#1E1B1A]";
+  const borderColor = isLightTheme ? "border-[#78716C]" : "border-[#D6D3D1]";
+ const primaryColor = isLightTheme ? "bg-[#78716C]" : "bg-[#D6D3D1]";
+ const accentColor = isLightTheme ? "accent-[#78716C]" : "accent-[#D6D3D1]";
 
   const mountRef = useRef(null);
   const [inputData, setInputData] = useState(new Array(10).fill(0.1));
@@ -72,7 +72,7 @@ const SparseAutoencoder = () => {
 
   useEffect(() => {
     if (globalScene) {
-      const color = isLightTheme ? 0xffffff : 0x161618;
+      const color = isLightTheme ? 0xF5F5F1 : 0x1E1B1A;
       globalScene.background = new THREE.Color(color);
     }
   }, [isLightTheme, globalScene]);
@@ -80,7 +80,7 @@ const SparseAutoencoder = () => {
   useEffect(() => {
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x161618);
+    scene.background = new THREE.Color(0x1C1917);
     setGlobalScene(scene);
 
     const camera = new THREE.PerspectiveCamera(
@@ -89,11 +89,34 @@ const SparseAutoencoder = () => {
       0.1,
       1000
     );
-    camera.position.z = 20;
-    camera.position.y = 5;
+    const updateCameraPosition = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        camera.position.z = 30; // Move camera back on mobile
+        camera.position.y = 8;
+      } else {
+        camera.position.z = 20;
+        camera.position.y = 5;
+      }
+      camera.updateProjectionMatrix();
+    };
+    updateCameraPosition();
+    window.addEventListener('resize', updateCameraPosition);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth * 0.55, window.innerHeight * 0.8);
+    const updateRendererSize = () => {
+      const width = window.innerWidth;
+      if (width < 768) { // mobile
+        renderer.setSize(width * 0.95, width * 0.8); 
+      } else if (width < 1024) { 
+        renderer.setSize(width * 0.8, width * 0.7);
+      } else { // desktop
+        renderer.setSize(width * 0.55, window.innerHeight * 0.8);
+      }
+    };
+    updateRendererSize();
+    window.addEventListener('resize', updateRendererSize);
+    
     mountRef.current.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -310,21 +333,21 @@ const SparseAutoencoder = () => {
     const rightInputs = inputData.slice(5);
 
     return (
-      <div className="flex flex-col h-full gap-4">
+      <div className="flex flex-col h-full gap-2 md:gap-4">
         <p
           className={`${
             isLightTheme ? "text-gray-600" : "text-gray-400"
-          } text-lg`}
+          } text-sm md:text-lg`}
         >
           Modify these input values to be passed
         </p>
-        <div className="flex justify-between">
+        <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
           {/* Left Side Inputs */}
-          <div className="flex flex-col gap-3 w-[48%]">
+          <div className="flex flex-col gap-2 md:gap-3 w-full md:w-[48%]">
             {leftInputs.map((value, index) => (
               <div
                 key={`left-input-${index}`}
-                className="flex items-center gap-3"
+                className="flex items-center gap-2 md:gap-3"
               >
                 <input
                   type="range"
@@ -345,18 +368,18 @@ const SparseAutoencoder = () => {
                   min="0"
                   max="1"
                   step="0.01"
-                  className="w-16 p-1 border rounded text-center"
+                  className="w-14 md:w-16 p-1 text-sm md:text-base border rounded text-center"
                 />
               </div>
             ))}
           </div>
 
           {/* Right Side Inputs */}
-          <div className="flex flex-col gap-3 w-[48%]">
+          <div className="flex flex-col gap-2 md:gap-3 w-full md:w-[48%]">
             {rightInputs.map((value, index) => (
               <div
                 key={`right-input-${index}`}
-                className="flex items-center gap-3"
+                className="flex items-center gap-2 md:gap-3"
               >
                 <input
                   type="range"
@@ -377,7 +400,7 @@ const SparseAutoencoder = () => {
                   min="0"
                   max="1"
                   step="0.01"
-                  className="w-16 p-1 border rounded text-center"
+                  className="w-14 md:w-16 p-1 text-sm md:text-base border rounded text-center"
                 />
               </div>
             ))}
@@ -385,22 +408,22 @@ const SparseAutoencoder = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-between mt-4">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-0 justify-between mt-2 md:mt-4">
           <button
             onClick={generateRandomInput}
-            className={`px-4 py-3 rounded-lg text-lg font-semibold bg-transparent ${textColor} ${borderColor} border ${
+            className={`px-3 md:px-4 py-2 md:py-3 rounded-lg text-base md:text-lg font-semibold bg-transparent ${textColor} ${borderColor} border ${
               isLightTheme ? "hover:bg-[#52459F]/10" : "hover:bg-[#C8BCF6]/10"
-            } w-[48%] transition-colors`}
+            } w-full md:w-[48%] transition-colors`}
           >
             Random Input
           </button>
           <button
             onClick={submitInput}
-            className={`px-4 py-3 text-lg font-semibold rounded-lg ${primaryColor} ${
+            className={`px-3 md:px-4 py-2 md:py-3 text-base md:text-lg font-semibold rounded-lg ${primaryColor} ${
               isLightTheme ? "text-white" : "text-black"
             } ${
               isLightTheme ? "hover:bg-[#52459F]/90" : "hover:bg-[#C8BCF6]/90"
-            }  w-[48%] transition-colors`}
+            }  w-full md:w-[48%] transition-colors`}
           >
             Submit
           </button>
@@ -411,53 +434,38 @@ const SparseAutoencoder = () => {
 
   // Existing component return remains the same, but modify the inputs card
   return (
-    <div className="h-full w-full p-5 flex flex-col gap-3 relative">
-      <div className="mb-4 space-y-4 w-full">
-        {/* Header */}
-        <div className="w-full mb-4">
-          <div className="w-full flex justify-between">
-            <div className="w-[80%] flex flex-col gap-3">
-              <h2 className={`text-4xl font-bold ${textColor}`}>
-                Sparse Autoencoder Visualization
-              </h2>
-              <p
-                className={`text-xl ${
-                  isLightTheme ? "text-gray-600" : "text-gray-400"
-                }`}
-              >
-                Active neurons are brighter. Green connections are positive
-                weights, red are negative.
-              </p>
-            </div>
-            <div className="flex items-center gap-3 ">
-              <Sun color={iconColor} />
-              <span
-                className={`text-lg  ${
-                  isLightTheme ? "text-black" : "text-[#C8BCF6]"
-                }`}
-              >
-                Light Mode
-              </span>
-              <CustomSwitch
-                isLightTheme={isLightTheme}
-                updateTheme={updateTheme}
-              />
-            </div>
+    <div className="min-h-screen w-full p-3 md:p-5 flex flex-col gap-3">
+      <div className="mb-2 md:mb-4 space-y-4 w-full">
+      <div className="w-full mb-2 md:mb-4">
+        <div className="w-full flex flex-col md:flex-row justify-between gap-4">
+          <div className="w-full md:w-[80%] flex flex-col gap-3">
+            <h2 className={`text-xl md:text-4xl font-bold ${textColor}`}>
+              Sparse Autoencoder Visualization
+            </h2>
+            <p className={`text-small md:text-xl ${isLightTheme ? "text-gray-600" : "text-gray-400"}`}>
+              Active neurons are brighter. Green connections are positive weights, red are negative.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 md:gap-3 justify-end">
+            <Sun color={iconColor} size={window.innerWidth < 768 ? 18 : 24}/>
+            <span className={`text-sm md:text-lg ${isLightTheme ? "text-black" : "text-[#C8BCF6]"}`}>
+              Light Mode
+            </span>
+            <CustomSwitch isLightTheme={isLightTheme} updateTheme={updateTheme} />
           </div>
         </div>
       </div>
-      <div className="flex gap-3 justify-center h-full items-center">
-        <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+    </div>
+      <div className="flex flex-col lg:flex-row gap-3 justify-center h-full">
+      <div className="w-full lg:w-[40%] flex flex-col gap-3">
+        <div className={`${bgColor} flex flex-col p-3 md:p-5 rounded-3xl w-full h-full`}>
+          <span className={`${textColor} text-base md:text-xl font-bold mb-2 md:mb-4`}>
+            Inputs
+          </span>
+          {renderInputSliders()}
+        </div>
           <div
-            className={`${bgColor} flex flex-col p-5 rounded-3xl w-full h-full`}
-          >
-            <span className={`${textColor} text-xl font-bold mb-4`}>
-              Inputs
-            </span>
-            {renderInputSliders()}
-          </div>
-          <div
-            className={`${bgColor} flex flex-col p-3 rounded-3xl w-full h-full`}
+            className={`${bgColor} flex flex-col p-3 rounded-xl md:rounded-3xl w-full`}
           >
             <InfoPanel
               selectedInfo={selectedInfo}
@@ -468,9 +476,7 @@ const SparseAutoencoder = () => {
         </div>
         <div
           ref={mountRef}
-          className={`${bgColor} flex justify-center items-center rounded-3xl h-full w-[60%] min-w-[${
-            window.innerWidth * 0.6
-          }]`}
+          className={`${bgColor} flex justify-center items-center rounded-xl md:rounded-3xl h-[300px] md:h-full w-full lg:w-[60%]`}
         />
       </div>
     </div>
